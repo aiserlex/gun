@@ -10,8 +10,6 @@ WINDOW_HEIGHT = 400
 
 FPS = 1
 
-cheat = 0
-
 
 class Board:
     def __init__(self):
@@ -53,12 +51,7 @@ class Board:
 
 class Tetromino:
     def __init__(self, x, y):
-        global cheat
-        if cheat:
-            self._figure = "I"
-            cheat = 0
-        else:
-            self._figure = random.choice("SZLJOTI")
+        self._figure = random.choice("SZLJOTI")
         self._x = x
         self._y = y
         if self._figure == "S":
@@ -265,7 +258,6 @@ class Game:
         self._update()
 
     def _onkeypress(self, event):
-        global cheat
         if event.keysym in ["Up", "w", "W"]:
             if self._tetromino.can_turn_left(self._board):
                 self._tetromino.turn_left()
@@ -286,8 +278,6 @@ class Game:
                 self._lines += lines
                 self._score += lines * 4
                 self._tetromino = Tetromino(5, 0)
-        elif event.keysym in "oO":
-            cheat = 1
 
         self._visualize()
 
@@ -306,14 +296,11 @@ class Game:
         self._window.root.after(round(1000 / FPS), self._update)
 
     def _visualize(self):
-        global cheat
         self._window.canvas.delete("all")
         self._vizual.draw_board(self._board.array)
         self._vizual.draw_tetromino(self._tetromino)
 
         status = f"Score: {self._score}; Lines: {self._lines}; FPS: {FPS}"
-        if cheat:
-            status += " (cheat on)"
         self._window.set_new_status(status)
 
     def mainloop(self):
