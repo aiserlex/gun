@@ -8,7 +8,7 @@ BOARD_HEIGHT = 20
 WINDOW_WIDTH = 200
 WINDOW_HEIGHT = 400
 
-FPS = 2
+SPEED = 2
 
 
 class Window:
@@ -253,7 +253,8 @@ class Visual:
 
 class Game:
     def __init__(self):
-        self._fps = FPS
+        self._speed = SPEED
+        self._speed_thresh = 16
         self._score = 0
         self._deletions = 0
         self._next_figure = [random.choice("SZLJOTI") for i in range(1)]
@@ -293,8 +294,8 @@ class Game:
         if (score := self._board.delete_full_lines()):
             self._score += score
             self._deletions += 1
-            if self._deletions == 16 * (self._fps + 1 - FPS):
-                self._fps += 1
+            if self._deletions == self._speed_thresh * (self._speed + 1 - SPEED):
+                self._speed += 1
 
         self._visualize()
 
@@ -302,7 +303,7 @@ class Game:
             self._visual.add_text("GAME OVER")
             return
 
-        self._window.root.after(round(1000 / self._fps), self._update)
+        self._window.root.after(round(1000 / self._speed), self._update)
 
     def _visualize(self):
         self._window.canvas.delete("all")
@@ -310,8 +311,9 @@ class Game:
         self._visual.draw_tetromino(self._tetromino)
         self._visual.draw_board(self._board)
 
-        status = f"Score: {self._score}; "
-        status += f"FPS: {self._fps}; "
+        status = f"Score: {self._score};  "
+        status += f"SPEED: {self._speed}"
+        status += f"({self._speed_thresh - self._deletions % self._speed_thresh});  "
         status += f"Next: {' '.join(self._next_figure)}"
         self._window.set_new_status(status)
 
