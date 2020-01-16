@@ -217,6 +217,7 @@ class Game(Board):
     def __init__(self):
         self._score = 0
         self._information = ""
+        self._is_running = True
         self._current_fps = FPS
 
         self._board = Board()
@@ -243,6 +244,12 @@ class Game(Board):
             self._current_fps += 0.5
         elif event.keysym in "Kk":
             self._current_fps -= 0.5
+        elif event.keysym == "space":
+            self._is_running = not self._is_running
+            if self._is_running:
+                self._update()
+            else:
+                self._board.root.after_cancel(self._after_id)
 
     def _update(self):
         self._board.canvas.delete("all")
@@ -271,6 +278,12 @@ class Game(Board):
 
         self._board.set_new_status(f"Score: {self._score};   FPS: {self._current_fps}")
 
+        # pause
+        if self._is_running:
+            self._information = ""
+        else:
+            self._information = "PAUSE"
+
         # win
         if len(self.snake.segments) >= BOARD_WIDTH * BOARD_HEIGHT:
             self._information = f"YOU WON!\nYOUR SCORE is {self._score}"
@@ -278,7 +291,7 @@ class Game(Board):
             return
 
         self._visualize()
-        self._board.root.after(round(1000 / self._current_fps), self._update)
+        self._after_id = self._board.root.after(round(1000 / self._current_fps), self._update)
 
     def _visualize(self):
         self.visualizer.draw_food(self.food)
