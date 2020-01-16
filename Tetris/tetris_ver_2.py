@@ -17,8 +17,8 @@ import tkinter as tk
 BOARD_WIDTH = 10
 BOARD_HEIGHT = 20
 
-WINDOW_WIDTH = 200
-WINDOW_HEIGHT = 400
+WINDOW_WIDTH = 300
+WINDOW_HEIGHT = 600
 
 SPEED = 1
 
@@ -33,7 +33,7 @@ class Window:
         self._root = tk.Tk()
         self._root.title("Game Tetris")
         self._root.resizable(False, False)
-        self._root.geometry(f"{WINDOW_WIDTH+4}x{WINDOW_HEIGHT+23}+500+200")
+        self._root.geometry(f"{WINDOW_WIDTH+4}x{WINDOW_HEIGHT+23}+500+0")
 
     def _init_canvas(self):
         self._canvas = tk.Canvas(
@@ -283,17 +283,17 @@ class Game:
         self._update()
 
     def _onkeypress(self, event):
+        if self._ispaused and event.keysym not in "Pp":
+            return
+        
         if event.keysym in ["Left", "a", "A"]:
             self._tetromino.try_move_left(self._board)
-            self._create_fantom()
 
         elif event.keysym in ["Right", "d", "D"]:
             self._tetromino.try_move_right(self._board)
-            self._create_fantom()
 
         elif event.keysym in ["Up", "w", "W"]:
             self._tetromino.try_turn(self._board)
-            self._create_fantom()
 
         elif event.keysym in ["Down", "s", "S"]:
             self._move_tetromino_down()
@@ -309,6 +309,7 @@ class Game:
             else:
                 self._update()
 
+        self._create_fantom()
         self._visualize()
 
     def _update(self):
