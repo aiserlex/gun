@@ -14,10 +14,10 @@ import random
 import tkinter as tk
 
 
-BOARD_WIDTH = 10
-BOARD_HEIGHT = 20
+BOARD_WIDTH = 12
+BOARD_HEIGHT = 30
 
-WINDOW_WIDTH = 300
+WINDOW_WIDTH = 240
 WINDOW_HEIGHT = 600
 
 SPEED = 1
@@ -322,6 +322,7 @@ class Game:
 
         if sum(self._board.data[0]) != 0:
             self._visual.add_text("GAME OVER")
+            self._ispaused = True
             return
 
         self._visualize()
