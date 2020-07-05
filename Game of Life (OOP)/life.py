@@ -142,6 +142,7 @@ class Game():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.pause = not self.pause
+                    print(f"Pause: {self.pause}")
                 elif event.key == pygame.K_c:
                     self.cells.clear()
                 elif event.key == pygame.K_s:
@@ -159,10 +160,8 @@ class Game():
                     self.cells.discard((x0, y0))
                 elif event.button == 4:
                     self.change_speed("up")
-                    # print("Speed up")
                 elif event.button == 5:
                     self.change_speed("down")
-                    # print("Speed down")
             elif event.type == pygame.MOUSEMOTION:
                 if event.buttons[0] == 1:
                     x0, y0 = self.board.get_board_coords(*event.pos)
